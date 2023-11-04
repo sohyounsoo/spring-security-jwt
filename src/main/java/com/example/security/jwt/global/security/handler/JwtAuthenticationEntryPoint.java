@@ -28,7 +28,7 @@ public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint {
         //response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
 
         /**
-         * 인증 실패 401 dto로 구현
+         * 인증 실패 401 dto로  직접 구현
          */
         ErrorResponse error = ErrorResponse.builder()
                 .status(HttpStatus.UNAUTHORIZED.value())
