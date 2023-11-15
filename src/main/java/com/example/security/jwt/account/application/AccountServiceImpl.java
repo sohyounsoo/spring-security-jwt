@@ -1,13 +1,22 @@
 package com.example.security.jwt.account.application;
 
+import com.example.security.jwt.account.application.dto.RequestAccount;
 import com.example.security.jwt.account.application.dto.ResponseAccount;
+import com.example.security.jwt.account.domain.AccountRepository;
+import com.example.security.jwt.account.domain.entity.Account;
 import com.example.security.jwt.account.domain.entity.AccountAdapter;
+import com.example.security.jwt.global.exception.ApplicationException;
+import com.example.security.jwt.global.exception.CommonErrorCode;
 import com.example.security.jwt.global.security.TokenProvider;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.ApplicationContextException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -15,6 +24,7 @@ public class AccountServiceImpl implements AccountService{
 
     private final TokenProvider tokenProvider;
     private final AuthenticationManagerBuilder authenticationManagerBuilder;
+    private final AccountRepository accountRepository;
 //    private final RefreshTokenProvider refreshTokenProvider;
 
 
@@ -40,5 +50,17 @@ public class AccountServiceImpl implements AccountService{
                 .accessToken(accessToken)
                 //.refreshToke()
                 .build();
+    }
+
+    @Transactional
+    @Override
+    public ResponseAccount.Information registerMember(RequestAccount.RegisterMember registerMemberDto) {
+        Optional<Account> accountOptional = accountRepository.findOneWithAuthoritiesByUsername(registerMemberDto.username());
+
+        if(accountOptional.isPresent()) {
+            throw new ApplicationException(CommonErrorCode.CONFLICT, "이미 가입되어있는 유저");
+        }
+
+        return null;
     }
 }
