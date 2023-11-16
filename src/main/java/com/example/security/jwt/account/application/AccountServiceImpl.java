@@ -5,6 +5,7 @@ import com.example.security.jwt.account.application.dto.ResponseAccount;
 import com.example.security.jwt.account.domain.AccountRepository;
 import com.example.security.jwt.account.domain.entity.Account;
 import com.example.security.jwt.account.domain.entity.AccountAdapter;
+import com.example.security.jwt.account.domain.entity.Authority;
 import com.example.security.jwt.global.exception.ApplicationException;
 import com.example.security.jwt.global.exception.CommonErrorCode;
 import com.example.security.jwt.global.security.TokenProvider;
@@ -13,9 +14,12 @@ import org.springframework.context.ApplicationContextException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Collections;
 import java.util.Optional;
 
 @Service
@@ -25,6 +29,7 @@ public class AccountServiceImpl implements AccountService{
     private final TokenProvider tokenProvider;
     private final AuthenticationManagerBuilder authenticationManagerBuilder;
     private final AccountRepository accountRepository;
+    private final PasswordEncoder passwordEncoder;
 //    private final RefreshTokenProvider refreshTokenProvider;
 
 
@@ -61,6 +66,34 @@ public class AccountServiceImpl implements AccountService{
             throw new ApplicationException(CommonErrorCode.CONFLICT, "이미 가입되어있는 유저");
         }
 
-        return null;
+        // 이 유저는 권한이 ROLE_MEMBER
+        // 이건 부팅 시 data.sql에서 INSERT로 디비에 반영해야 한다. 즉 디비에 존재하는 값이여야함
+        Authority authority = Authority.builder()
+                .authorityName("ROLE_MEMBER")
+                .build();
+
+        Account user = Account.builder()
+                .username(registerMemberDto.username())
+                .password(passwordEncoder.encode(registerMemberDto.password()))
+                .nickname(registerMemberDto.nickname())
+                .authorities(Collections.singleton(authority))
+                .activated(true)
+                .build();
+
+        // DB에 저장하고 그걸 DTO로 변환해서 반환, 예제라서 비번까지 다 보낸다.??
+        return ResponseAccount.Information.of(accountRepository.save(user));
     }
+
+    @Transactional(readOnly = true)
+    @Override
+    public ResponseAccount.Information getAccountWithAuthorities(String username) {
+        Account account = accountRepository.findOneWithAuthoritiesByUsername(username)
+                .orElseThrow(() -> new UsernameNotFoundException(username + "-> 찾을 수 없습니다."));
+
+        return ResponseAccount.Information.of(account);
+    }
+
+    // 현재 시큐리티 컨텍스트에 저장된 username에 해당하는 정보를 가져온다.
+
+
 }
