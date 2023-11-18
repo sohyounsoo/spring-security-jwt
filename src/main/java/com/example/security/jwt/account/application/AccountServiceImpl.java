@@ -18,7 +18,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.text.SimpleDateFormat;
 import java.util.Collections;
+import java.util.Date;
 import java.util.Optional;
 
 @Service
@@ -45,6 +47,7 @@ public class AccountServiceImpl implements AccountService{
 
         // 인증 정보를 기준으로 jwt access 토큰 생성
         String accessToken = tokenProvider.createToken(authentication);
+        Date expiredTime = tokenProvider.getExpiredTime(accessToken);
 
         // 위에서 loadUserByUsername를 호출하였으므로 AccountAdapter가 시큐리티 컨텍스트에 저장되어 Account 엔티티 정보를 우리는 알 수 있음
         // 유저 정보에서 중치를 꺼내 리프레시 토큰 가중치에 할당, 나중에 액세스토큰 재발급 시도 시 유저정보 가중치 > 리프레시 토큰이라면 실패
@@ -52,6 +55,7 @@ public class AccountServiceImpl implements AccountService{
 
         return ResponseAccount.Token.builder()
                 .accessToken(accessToken)
+                .expiredTime(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(expiredTime))
                 //.refreshToke()
                 .build();
     }

@@ -4,6 +4,7 @@ import com.example.security.jwt.account.domain.entity.Account;
 import com.example.security.jwt.account.domain.entity.Authority;
 import lombok.Builder;
 
+import java.util.Date;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -12,6 +13,7 @@ public record ResponseAccount()
     @Builder
     public record Token(
             String accessToken,
+            String expiredTime,
             String refreshToken
     ) {
     }

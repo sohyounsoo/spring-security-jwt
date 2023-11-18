@@ -98,4 +98,15 @@ public class TokenProvider {
         }
         return false;
     }
+
+    public Date getExpiredTime(String accessToken) {
+        // 토큰 디코딩
+        Claims claims = Jwts.parserBuilder()
+                .setSigningKey(key)
+                .build()
+                .parseClaimsJws(accessToken)
+                .getBody();
+
+        return claims.getExpiration();
+    }
 }
