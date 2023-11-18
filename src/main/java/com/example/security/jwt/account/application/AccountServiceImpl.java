@@ -10,7 +10,6 @@ import com.example.security.jwt.global.exception.ApplicationException;
 import com.example.security.jwt.global.exception.CommonErrorCode;
 import com.example.security.jwt.global.security.TokenProvider;
 import lombok.RequiredArgsConstructor;
-import org.springframework.context.ApplicationContextException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.core.Authentication;
