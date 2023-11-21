@@ -47,7 +47,7 @@ public class AccountServiceImpl implements AccountService{
 
         // 인증 정보를 기준으로 jwt access 토큰 생성
         String accessToken = tokenProvider.createToken(authentication);
-        Date expiredTime = tokenProvider.getExpiredTime(accessToken);
+        Date expiredTime = tokenProvider.getExpiredTime(accessToken); // 토큰 정보에서 만료된 정보를 가져옴
 
         // 위에서 loadUserByUsername를 호출하였으므로 AccountAdapter가 시큐리티 컨텍스트에 저장되어 Account 엔티티 정보를 우리는 알 수 있음
         // 유저 정보에서 중치를 꺼내 리프레시 토큰 가중치에 할당, 나중에 액세스토큰 재발급 시도 시 유저정보 가중치 > 리프레시 토큰이라면 실패
@@ -84,6 +84,30 @@ public class AccountServiceImpl implements AccountService{
                 .build();
 
         // DB에 저장하고 그걸 DTO로 변환해서 반환, 예제라서 비번까지 다 보낸다.??
+        return ResponseAccount.Information.of(accountRepository.save(user));
+    }
+
+    @Override
+    public ResponseAccount.Information registerAdmin(RequestAccount.RegisterAdmin registerAdminDto) {
+        Optional<Account> accountOptional = accountRepository.findOneWithAuthoritiesByUsername(registerAdminDto.username());
+
+        if(accountOptional.isPresent()) {
+            throw new ApplicationException(CommonErrorCode.CONFLICT, "이미 가입되어있는 유저");
+        }
+
+        //이건 부팅 시 data.sql에서 INSERT로 디비에 반영
+        Authority authority = Authority.builder()
+                .authorityName("ROLE_ADMIN")
+                .build();
+
+        Account user = Account.builder()
+                .username(registerAdminDto.username())
+                .password(passwordEncoder.encode(registerAdminDto.password()))
+                .nickname(registerAdminDto.nickname())
+                .authorities(Collections.singleton(authority))
+                .activated(true)
+                .build();
+
         return ResponseAccount.Information.of(accountRepository.save(user));
     }
 
