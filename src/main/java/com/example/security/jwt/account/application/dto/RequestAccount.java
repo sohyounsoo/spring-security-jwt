@@ -20,7 +20,7 @@ public record RequestAccount() {
     @Builder
     public record Refresh(
             @NotNull
-            String toekn
+            String token
     ) {
     }
 
