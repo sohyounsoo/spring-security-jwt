@@ -1,5 +1,6 @@
 package com.example.security.jwt.global.security;
 
+import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import org.springframework.security.core.Authentication;
@@ -31,6 +32,12 @@ public class RefreshTokenProvider extends TokenProvider {
                 .signWith(key, SignatureAlgorithm.HS512)
                 .setExpiration(validity)
                 .compact();
+    }
+
+    public long getTokenWeight(String token) {
+        //토큰에서 가중치를 꺼내 반환한다.
+        Claims claims = Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token).getBody();
+        return Long.valueOf(String.valueOf(claims.get(WEIGHT_KEY)));
     }
 
 }

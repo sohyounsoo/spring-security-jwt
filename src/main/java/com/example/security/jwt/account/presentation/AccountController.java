@@ -9,10 +9,7 @@ import jakarta.validation.Valid;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/v1/accounts")
@@ -40,5 +37,23 @@ public class AccountController {
                 .build();
 
         return new ResponseEntity<>(response, headers, HttpStatus.OK);
+    }
+
+    @PutMapping("/token") // 리프레시 토큰을 활용한 액세스 토큰 갱신
+    public ResponseEntity<CommonResponse> refreshToken(@Valid @RequestBody RequestAccount.Refresh refreshDto) {
+
+        ResponseAccount.Token token = accountService.refreshToken(refreshDto.token());
+
+        // response header 에도 넣고 응답 객체에도 넣는다.
+        HttpHeaders httpHeaders = new HttpHeaders();
+        httpHeaders.add(CustomJwtFilter.AUTHORIZATION_HEADER, "Bearer " + token.accessToken());
+
+        // 응답
+        CommonResponse response = CommonResponse.builder()
+                .success(true)
+                .response(token)
+                .build();
+
+        return new ResponseEntity<>(response, httpHeaders, HttpStatus.OK);
     }
 }
