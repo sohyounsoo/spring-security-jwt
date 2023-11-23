@@ -13,7 +13,6 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 
-import java.nio.channels.ScatteringByteChannel;
 import java.security.Key;
 import java.util.Arrays;
 import java.util.Collection;

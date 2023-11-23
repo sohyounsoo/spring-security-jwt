@@ -8,6 +8,7 @@ import com.example.security.jwt.account.domain.entity.AccountAdapter;
 import com.example.security.jwt.account.domain.entity.Authority;
 import com.example.security.jwt.global.exception.ApplicationException;
 import com.example.security.jwt.global.exception.CommonErrorCode;
+import com.example.security.jwt.global.security.RefreshTokenProvider;
 import com.example.security.jwt.global.security.TokenProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -31,7 +32,7 @@ public class AccountServiceImpl implements AccountService{
     private final AuthenticationManagerBuilder authenticationManagerBuilder;
     private final AccountRepository accountRepository;
     private final PasswordEncoder passwordEncoder;
-//    private final RefreshTokenProvider refreshTokenProvider;
+    private final RefreshTokenProvider refreshTokenProvider;
 
 
     // username과 password로 사용자를 인증하여 액세스토큰과 리프레시 토큰을 반환한다.
@@ -52,11 +53,13 @@ public class AccountServiceImpl implements AccountService{
         // 위에서 loadUserByUsername를 호출하였으므로 AccountAdapter가 시큐리티 컨텍스트에 저장되어 Account 엔티티 정보를 우리는 알 수 있음
         // 유저 정보에서 중치를 꺼내 리프레시 토큰 가중치에 할당, 나중에 액세스토큰 재발급 시도 시 유저정보 가중치 > 리프레시 토큰이라면 실패
         Long tokenWeight = ((AccountAdapter)authentication.getPrincipal()).getAccount().getTokenWeight();
+        String refreshToke =  refreshTokenProvider.createToken(authentication, tokenWeight);
+
 
         return ResponseAccount.Token.builder()
                 .accessToken(accessToken)
                 .expiredTime(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(expiredTime))
-                //.refreshToke()
+                .refreshToken(refreshToke)
                 .build();
     }
 
