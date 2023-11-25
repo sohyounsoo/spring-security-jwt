@@ -30,7 +30,7 @@ public class CustomJwtFilter extends GenericFilterBean {
 
     // 실제 필터링 로직은 doFilter 안에 들어가게 된다. GenericFilterBean을 받아 구현
     @Override
-    public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
+    public void doFilter(ServletRequest request, ServletResponse response, FilterChain filterChain) throws IOException, ServletException {
         HttpServletRequest httpServletRequest = (HttpServletRequest) request;
         String jwt = resolveToken(httpServletRequest);
         String requestURI = httpServletRequest.getRequestURI();
@@ -46,7 +46,7 @@ public class CustomJwtFilter extends GenericFilterBean {
             logger.debug("유효한 JWT 토큰이 없습니다. uri: {}", requestURI);
         }
 
-        chain.doFilter(request, response);
+        filterChain.doFilter(request, response);
     }
 
     //헤더에서 토큰 정보를 꺼내온다.
