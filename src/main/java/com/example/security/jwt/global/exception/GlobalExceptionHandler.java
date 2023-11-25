@@ -2,7 +2,6 @@ package com.example.security.jwt.global.exception;
 
 import com.example.security.jwt.global.dto.CommonResponse;
 import com.example.security.jwt.global.dto.ErrorResponse;
-import org.hibernate.boot.jaxb.internal.stax.XmlInfrastructureException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;

@@ -9,6 +9,9 @@ public interface AccountService {
 
     ResponseAccount.Information registerMember(RequestAccount.RegisterMember registerMemberDto);
 
+    ResponseAccount.Information registerAdmin(RequestAccount.RegisterAdmin registerAdminDto);
+
     ResponseAccount.Information getAccountWithAuthorities(String username);
 
+    ResponseAccount.Token refreshToken(String toekn);
 }
