@@ -36,7 +36,7 @@ public class RefreshTokenProvider extends TokenProvider {
 
     public long getTokenWeight(String token) {
         //토큰에서 가중치를 꺼내 반환한다.
-        Claims claims = Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token).getBody();
+        Claims claims = getClaims(token);
         return Long.valueOf(String.valueOf(claims.get(WEIGHT_KEY)));
     }
 

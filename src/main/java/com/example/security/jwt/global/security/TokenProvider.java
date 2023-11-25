@@ -36,6 +36,7 @@ public class TokenProvider {
         //시크릿 값을 decode해서  키 변수에 할당
         byte[] keyBytes = Decoders.BASE64.decode(secret);
         this.key = Keys.hmacShaKeyFor(keyBytes);
+
     }
 
     // 토큰 생성
@@ -59,12 +60,7 @@ public class TokenProvider {
 
     //토큰을 받아 클레임을 만들고 권한정보를 빼서 시큐리티 유저객체를 만들어 Authentication 객체 반환
     public Authentication getAuthentication(String token) {
-        Claims claims = Jwts
-                .parserBuilder()
-                .setSigningKey(key)
-                .build()
-                .parseClaimsJws(token) // 토큰을 파싱
-                .getBody();
+        Claims claims = getClaims(token);
 
         Collection<? extends GrantedAuthority> authorities =
                 Arrays.stream(claims.get(AUTHORITIES_KEY).toString().split(","))
@@ -80,11 +76,7 @@ public class TokenProvider {
     //토큰 유효성 검사
     public boolean validateToken(String token) {
         try {
-            Claims claims = Jwts.parserBuilder()
-                    .setSigningKey(key)
-                    .build()
-                    .parseClaimsJws(token)
-                    .getBody();
+            Claims claims = getClaims(token);
             return true;
         } catch (SecurityException | MalformedJwtException e) {
             logger.info("잘못된 JWT 서명입니다.");
@@ -98,14 +90,18 @@ public class TokenProvider {
         return false;
     }
 
-    public Date getExpiredTime(String accessToken) {
-        // 토큰 디코딩
+    // 토큰 디코딩
+    public Claims getClaims(String token) {
         Claims claims = Jwts.parserBuilder()
                 .setSigningKey(key)
                 .build()
-                .parseClaimsJws(accessToken)
+                .parseClaimsJws(token)
                 .getBody();
+        return claims;
+    }
 
+    public Date getExpiredTime(String token) {
+        Claims claims = getClaims(token);
         return claims.getExpiration();
     }
 }
