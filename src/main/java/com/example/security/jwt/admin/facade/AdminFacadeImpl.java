@@ -29,7 +29,7 @@ public class AdminFacadeImpl implements AdminFacade {
                 .authoritySet(response.authoritySet())
                 .nickname(response.nickname())
                 .tokenWeight(response.tokenWeight())
-                .password(response.password())
+//                .password(response.password())
                 .username(response.username())
                 .build();
     }

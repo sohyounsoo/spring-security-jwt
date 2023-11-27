@@ -6,20 +6,23 @@ import com.example.security.jwt.account.application.dto.ResponseAccount;
 import com.example.security.jwt.global.dto.CommonResponse;
 import com.example.security.jwt.global.security.CustomJwtFilter;
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/v1/accounts")
+@RequiredArgsConstructor
 public class AccountController {
+    private static final Logger logger = LoggerFactory.getLogger(AccountController.class);
     private final AccountService accountService;
-
-    // 생성자 주입
-    public AccountController(AccountService accountService) {
-        this.accountService = accountService;
-    }
 
     @PostMapping("/token") // Acount 인증 API
     public ResponseEntity<CommonResponse> authorize(@Valid @RequestBody RequestAccount.Login loginDto) {
@@ -55,5 +58,25 @@ public class AccountController {
                 .build();
 
         return new ResponseEntity<>(response, httpHeaders, HttpStatus.OK);
+    }
+
+    /**
+     * Authorization : Bearer {AccessToken}
+     * @AuthenticationPrincipal를 통해 JwtFilter에서 토큰을 검증하며 등록한 시큐리티 유저 객체를 꺼내옴
+     * JwtFilter는 디비 조회 X
+     */
+    @GetMapping("/user")
+    @PreAuthorize("hasAnyRole('MEMBER','ADMIN')") // USER, ADMIN 권한 둘 다 호출 허용
+    public ResponseEntity<CommonResponse> getMyUserInfo(@AuthenticationPrincipal User user) {
+        logger.info(user.getUsername() + " " + user.getAuthorities());
+        ResponseAccount.Information information = accountService.getMyAccountWithAuthorities();
+
+        // 응답
+        CommonResponse response = CommonResponse.builder()
+                .success(true)
+                .response(information)
+                .build();
+
+        return ResponseEntity.ok(response);
     }
 }

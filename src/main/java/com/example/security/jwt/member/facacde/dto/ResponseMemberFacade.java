@@ -8,7 +8,7 @@ public record ResponseMemberFacade() {
     @Builder
     public record Information(
             String username,
-            String password,
+//            String password,
             String nickname,
             Long tokenWeight,
             Set<String> authoritySet

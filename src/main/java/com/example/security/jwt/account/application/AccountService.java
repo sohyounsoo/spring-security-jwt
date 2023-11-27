@@ -14,4 +14,6 @@ public interface AccountService {
     ResponseAccount.Information getAccountWithAuthorities(String username);
 
     ResponseAccount.Token refreshToken(String toekn);
+
+    ResponseAccount.Information getMyAccountWithAuthorities();
 }

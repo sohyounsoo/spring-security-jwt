@@ -27,7 +27,7 @@ public class MemberFacadeImpl implements MemberFacade {
                 .authoritySet(response.authoritySet())
                 .nickname(response.nickname())
                 .tokenWeight(response.tokenWeight())
-                .password(response.password())
+//                .password(response.password())
                 .username(response.username())
                 .build();
     }

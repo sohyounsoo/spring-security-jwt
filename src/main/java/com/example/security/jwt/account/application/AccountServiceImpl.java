@@ -11,6 +11,7 @@ import com.example.security.jwt.global.exception.ApplicationException;
 import com.example.security.jwt.global.exception.CommonErrorCode;
 import com.example.security.jwt.global.security.RefreshTokenProvider;
 import com.example.security.jwt.global.security.TokenProvider;
+import com.example.security.jwt.global.security.util.SecurityUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -19,6 +20,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 
 import java.text.SimpleDateFormat;
 import java.util.Collections;
@@ -34,6 +36,7 @@ public class AccountServiceImpl implements AccountService{
     private final AccountRepository accountRepository;
     private final PasswordEncoder passwordEncoder;
     private final RefreshTokenProvider refreshTokenProvider;
+    private final SecurityUtil securityUtil;
 
 
     // username과 password로 사용자를 인증하여 액세스토큰과 리프레시 토큰을 반환한다.
@@ -124,6 +127,7 @@ public class AccountServiceImpl implements AccountService{
         return ResponseAccount.Information.of(account);
     }
 
+    @Transactional(readOnly = true)
     @Override
     public ResponseAccount.Token refreshToken(String refreshToken) {
         // 먼저 리프레시 토큰을 검증한다.
@@ -149,7 +153,12 @@ public class AccountServiceImpl implements AccountService{
                 .build();
     }
 
-    // 현재 시큐리티 컨텍스트에 저장된 username에 해당하는 정보를 가져온다.
-
-
+    @Transactional(readOnly = true)
+    @Override
+    public ResponseAccount.Information getMyAccountWithAuthorities() {
+        Account account = securityUtil.getCurrentUsername()
+                .flatMap(accountRepository::findOneWithAuthoritiesByUsername)
+                .orElseThrow(() -> new UsernameNotFoundException("security context로부터 찾을 수 없습니다."));
+        return ResponseAccount.Information.of(account);
+    }
 }
