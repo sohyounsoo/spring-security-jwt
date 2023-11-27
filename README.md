@@ -25,3 +25,7 @@ POST /api/v1/accounts/token
 PUT /api/v1/accounts/token
 ```
 
+### 유저조회 API
+```java
+PUT /api/v1/accounts/token
+```
