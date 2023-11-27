@@ -16,4 +16,6 @@ public interface AccountService {
     ResponseAccount.Token refreshToken(String toekn);
 
     ResponseAccount.Information getMyAccountWithAuthorities();
+
+    void invalidateRefreshTokenByUsername(String userName);
 }

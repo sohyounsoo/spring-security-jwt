@@ -79,4 +79,16 @@ public class AccountController {
 
         return ResponseEntity.ok(response);
     }
+
+    @DeleteMapping("/{userName}/token")
+    @PreAuthorize("hasAnyRole('ADMIN')") // ADMIN 권한만 호출 가능
+    public ResponseEntity<CommonResponse> authorize(@PathVariable String userName) {
+        accountService.invalidateRefreshTokenByUsername(userName);
+        //응답
+        CommonResponse response = CommonResponse.builder()
+                .success(true)
+                .build();
+
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
 }

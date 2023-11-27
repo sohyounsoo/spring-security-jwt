@@ -20,7 +20,6 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.StringUtils;
 
 import java.text.SimpleDateFormat;
 import java.util.Collections;
@@ -94,6 +93,7 @@ public class AccountServiceImpl implements AccountService{
         return ResponseAccount.Information.of(accountRepository.save(user));
     }
 
+    @Transactional
     @Override
     public ResponseAccount.Information registerAdmin(RequestAccount.RegisterAdmin registerAdminDto) {
         Optional<Account> accountOptional = accountRepository.findOneWithAuthoritiesByUsername(registerAdminDto.username());
@@ -160,5 +160,13 @@ public class AccountServiceImpl implements AccountService{
                 .flatMap(accountRepository::findOneWithAuthoritiesByUsername)
                 .orElseThrow(() -> new UsernameNotFoundException("security context로부터 찾을 수 없습니다."));
         return ResponseAccount.Information.of(account);
+    }
+
+    @Transactional
+    @Override
+    public void invalidateRefreshTokenByUsername(String userName) {
+        Account account = accountRepository.findOneWithAuthoritiesByUsername(userName)
+                .orElseThrow(() -> new UsernameNotFoundException(userName + "-> 찾을 수 없습니다."));
+        account.increaseTokenWeight();
     }
 }
