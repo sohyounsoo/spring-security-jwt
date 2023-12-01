@@ -13,10 +13,26 @@ flyway DB 마이그레이션 도구 사용합니다.
 POST /api/v1/members   
 ```
 
+request
+```  
+{
+    username: String,
+    password: String,
+    nickname: String
+}
+```
 
 ### 계정 인증 API
 ```java
 POST /api/v1/accounts/token
+```
+
+request
+```  
+{
+    username: String,
+    password: String
+}
 ```
 
 
@@ -24,6 +40,14 @@ POST /api/v1/accounts/token
 ```java
 PUT /api/v1/accounts/token
 ```
+
+request
+```  
+{
+    refreshToken: String
+}
+```
+
 
 ### 유저조회 API
 ```java
