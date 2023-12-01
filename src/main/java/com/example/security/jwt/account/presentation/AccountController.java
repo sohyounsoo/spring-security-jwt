@@ -45,7 +45,7 @@ public class AccountController {
     @PutMapping("/token") // 리프레시 토큰을 활용한 액세스 토큰 갱신
     public ResponseEntity<CommonResponse> refreshToken(@Valid @RequestBody RequestAccount.Refresh refreshDto) {
 
-        ResponseAccount.Token token = accountService.refreshToken(refreshDto.token());
+        ResponseAccount.Token token = accountService.refreshToken(refreshDto.refreshToken());
 
         // response header 에도 넣고 응답 객체에도 넣는다.
         HttpHeaders httpHeaders = new HttpHeaders();
