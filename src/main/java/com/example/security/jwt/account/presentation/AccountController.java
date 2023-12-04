@@ -64,6 +64,7 @@ public class AccountController {
      * Authorization : Bearer {AccessToken}
      * @AuthenticationPrincipal를 통해 JwtFilter에서 토큰을 검증하며 등록한 시큐리티 유저 객체를 꺼내옴
      * JwtFilter는 디비 조회 X
+     * 토큰 유저 조회
      */
     @GetMapping("/user")
     @PreAuthorize("hasAnyRole('MEMBER','ADMIN')") // USER, ADMIN 권한 둘 다 호출 허용
@@ -80,8 +81,13 @@ public class AccountController {
         return ResponseEntity.ok(response);
     }
 
+    /**
+     * 해당 계정의 가중치를 1 올린다. -> 리플레쉬 토큰 무효
+     * @param userName
+     * @return
+     */
     @DeleteMapping("/{userName}/token")
-    @PreAuthorize("hasAnyRole('ADMIN')") // ADMIN 권한만 호출 가능
+    @PreAuthorize("hasAnyRole('ADMIN')")
     public ResponseEntity<CommonResponse> authorize(@PathVariable String userName) {
         accountService.invalidateRefreshTokenByUsername(userName);
         //응답
