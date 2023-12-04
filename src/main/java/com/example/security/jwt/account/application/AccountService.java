@@ -18,4 +18,6 @@ public interface AccountService {
     ResponseAccount.Information getMyAccountWithAuthorities();
 
     void invalidateRefreshTokenByUsername(String userName);
+
+    void deleteMember(String userName);
 }

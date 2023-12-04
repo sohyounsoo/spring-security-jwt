@@ -169,4 +169,12 @@ public class AccountServiceImpl implements AccountService{
                 .orElseThrow(() -> new UsernameNotFoundException(userName + "-> 찾을 수 없습니다."));
         account.increaseTokenWeight();
     }
+
+    @Transactional
+    @Override
+    public void deleteMember(String userName) {
+        Account account = accountRepository.findOneWithAuthoritiesByUsername(userName)
+                .orElseThrow(() -> new UsernameNotFoundException(userName + "-> 찾을 수 없습니다."));
+        account.deleteMember();
+    }
 }

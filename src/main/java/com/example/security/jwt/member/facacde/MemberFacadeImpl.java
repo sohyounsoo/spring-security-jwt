@@ -31,4 +31,9 @@ public class MemberFacadeImpl implements MemberFacade {
                 .username(response.username())
                 .build();
     }
+
+    @Override
+    public void delete(String userName) {
+        accountService.deleteMember(userName);
+    }
 }

@@ -53,4 +53,8 @@ public class Account {
     public void increaseTokenWeight() {
         this.tokenWeight++;
     }
+
+    public void deleteMember() {
+        this.activated = false;
+    }
 }
