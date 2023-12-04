@@ -53,3 +53,8 @@ request
 ```java
 GET /api/v1/accounts/token
 ```
+
+request
+```  
+-H "Authorization: Bearer ${ACCESS_TOKEN}"
+```
