@@ -22,6 +22,7 @@ request
 }
 ```
 
+
 ### 계정 인증 API
 ```java
 POST /api/v1/accounts/token
