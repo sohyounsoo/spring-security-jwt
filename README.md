@@ -12,7 +12,6 @@ flyway DB 마이그레이션 도구 사용합니다.
 ```java  
 POST /api/v1/members   
 ```
-
 request
 ```  
 {
@@ -27,7 +26,6 @@ request
 ```java
 POST /api/v1/accounts/token
 ```
-
 request
 ```  
 {
@@ -41,7 +39,6 @@ request
 ```java
 PUT /api/v1/accounts/token
 ```
-
 request
 ```  
 {
@@ -54,7 +51,6 @@ request
 ```java
 GET /api/v1/accounts/token
 ```
-
 request
 ```  
 -H "Authorization: Bearer ${ACCESS_TOKEN}"
