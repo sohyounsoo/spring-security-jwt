@@ -10,7 +10,7 @@ flyway DB 마이그레이션 도구 사용합니다.
 
 ### 일반 유저 등록 API  
 ```java  
-POST /api/v1/member  
+POST /api/v1/members  
 ```
 request
 ```  
@@ -63,7 +63,7 @@ request
 
 ### 일반 계정 탈퇴 API  
 ```java  
-Delete /api/v1/member/{userName}/delete  
+Delete /api/v1/members/{userName}/delete  
 ```
 request
 ```  
