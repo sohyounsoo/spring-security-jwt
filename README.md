@@ -10,9 +10,8 @@ flyway DB 마이그레이션 도구 사용합니다.
 
 ### 일반 유저 등록 API  
 ```java  
-POST /api/v1/members   
+POST /api/v1/members  
 ```
-
 request
 ```  
 {
@@ -22,11 +21,12 @@ request
 }
 ```
 
+
+
 ### 계정 인증 API
 ```java
 POST /api/v1/accounts/token
 ```
-
 request
 ```  
 {
@@ -36,11 +36,11 @@ request
 ```
 
 
+
 ### 액세스 토큰, 리프레시 토큰 갱신 API
 ```java
 PUT /api/v1/accounts/token
 ```
-
 request
 ```  
 {
@@ -49,7 +49,24 @@ request
 ```
 
 
+
 ### 유저조회 API
 ```java
 GET /api/v1/accounts/token
 ```
+request
+```  
+-H "Authorization: Bearer ${ACCESS_TOKEN}"
+```
+
+
+
+### 일반 계정 탈퇴 API  
+```java  
+Delete /api/v1/members/{userName}/delete  
+```
+request
+```  
+-H "Authorization: Bearer ${ACCESS_TOKEN}"
+```
+
