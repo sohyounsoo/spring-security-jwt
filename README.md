@@ -59,7 +59,7 @@ request
 
 ### 일반 계정 탈퇴 API  
 ```java  
-Delete /api/v1/members/{userName}/delete  
+Delete /api/v1/member/{userName}/delete  
 ```
 request
 ```  
