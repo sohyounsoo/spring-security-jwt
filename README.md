@@ -22,6 +22,7 @@ request
 ```
 
 
+
 ### 계정 인증 API
 ```java
 POST /api/v1/accounts/token
@@ -33,6 +34,7 @@ request
     password: String
 }
 ```
+
 
 
 ### 액세스 토큰, 리프레시 토큰 갱신 API
@@ -47,6 +49,7 @@ request
 ```
 
 
+
 ### 유저조회 API
 ```java
 GET /api/v1/accounts/token
@@ -57,6 +60,7 @@ request
 ```
 
 
+
 ### 일반 계정 탈퇴 API  
 ```java  
 Delete /api/v1/member/{userName}/delete  
@@ -65,3 +69,4 @@ request
 ```  
 -H "Authorization: Bearer ${ACCESS_TOKEN}"
 ```
+
